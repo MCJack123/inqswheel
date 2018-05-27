@@ -28,7 +28,7 @@ typedef struct key {
 } key;
 
 inline char addWithMax(char num1, char num2, char max, char min = 0) {
-    if (num1 + num2 > max) return min + (num1 + num2 - max);
+    if (num1 + num2 > max) return min + ((num1 + num2) - max) - 1;
     else if (num1 + num2 < min) return max - (min - (num1 + num2)) + 1;
     else return num1 + num2;
 }
@@ -51,7 +51,7 @@ key fillValue(key value, key keyval) {
             //encrypt
             retval.character = value.character;
             char rotation = value.character - keyval.character;
-            for (int i = 0; i < 4; i++) retval.values[i] = addWithMax(keyval.values[i], rotation, 26*(i+1), 26*i);
+            for (int i = 0; i < 4; i++) retval.values[i] = addWithMax(keyval.values[i], rotation, 26*(i+1), 26*i + 1);
         } else {
             //decrypt
             int wheelnum = 0;
@@ -152,7 +152,9 @@ int main(int argc, const char * argv[]) {
             std::cout << fillValue(value, keyval).character;
         } else {
             //encrypt
-            char ch = setcase(in->get(), lowercase);
+            char c = in->get();
+            if (c == 0x7f || c  == (-118 & 0x7f)) continue;
+            char ch = setcase(c, lowercase);
             value.encryptable = !(ch & 0b10000000);
             value.character = ch;
             if (ch == -1) continue;
