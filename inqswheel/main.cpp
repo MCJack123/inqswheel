@@ -90,7 +90,7 @@ int main(int argc, const char * argv[]) {
     else if (argv[1][0] == 'd') encstate = 0;
     else if (argv[1][0] == 'n') encstate = 2;
     else {
-        std::cerr << "Invalid command (use e or d)\n";
+        std::cerr << "Invalid command (use encrypt or decrypt)\n";
         return 3;
     }
     
