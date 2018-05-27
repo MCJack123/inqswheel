@@ -76,7 +76,7 @@ std::istream * getFile(int argc, const char * argv[]) {
 
 int main(int argc, const char * argv[]) {
     if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " <e|d|n> <key> [file]\nKey format example: A01275379\n";
+        std::cerr << "Usage: " << argv[0] << " <encrypt|decrypt|number> <key> [file]\nKey format example: A01275379\n";
         return 1;
     }
     std::string keystr(argv[2]);
