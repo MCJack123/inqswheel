@@ -51,10 +51,10 @@ function fillValue(value, keyval) {
 function inqswheel(encstate, keystr, text) {
     if (keystr.length != 9) {
         alert("Invalid key format (key format example: A01275379)");
-        return 2;
+        return '2';
     }
-    bool lowercase;
-    if (encstate > 2) return 3;
+    var lowercase = false;
+    if (encstate > 2) return '3';
     
     var keyval = new key();
     keyval.character = keystr[0];
@@ -62,79 +62,73 @@ function inqswheel(encstate, keystr, text) {
     else if (co(keyval.character) >= co('a') && co(keyval.character) <= co('z')) lowercase = true;
     else {
         alert("Invalid key format (key format example: A01275379)\n");
-        return 2;
+        return '2';
     }
-    try {
-        keyval.values[0] = std::stoi(keystr.substr(1, 2));
-        keyval.values[1] = std::stoi(keystr.substr(3, 2));
-        keyval.values[2] = std::stoi(keystr.substr(5, 2));
-    } catch (std::invalid_argument &e) {
-        std::cerr << "Invalid key format (key format example: A01275379)\n";
-        return 2;
+    keyval.values[0] = parseInt(keystr.substring(1, 2));
+    keyval.values[1] = parseInt(keystr.substring(3, 2));
+    keyval.values[2] = parseInt(keystr.substring(5, 2));
+    keyval.values[3] = parseInt(keystr.substring(7, 2));
+    if (isNaN(keyval.values[0] || isNaN(keyval.values[1] || isNaN(keyval.values[2]) {
+        alert("Invalid key format (key format example: A01275379)\n");
+        return '2';
     }
-    try {
-        keyval.values[3] = std::stoi(keystr.substr(7, 2));
-    } catch (std::invalid_argument &e) {
-        if (keystr.substr(7, 2) == "V1") keyval.values[3] = 101;
-        else if (keystr.substr(7, 2) == "V2") keyval.values[3] = 102;
-        else if (keystr.substr(7, 2) == "V3") keyval.values[3] = 103;
-        else if (keystr.substr(7, 2) == "IQ") keyval.values[3] = 104;
+    if (isNaN(keyval.values[3])) {
+        if (keystr.substring(7, 2) == "V1") keyval.values[3] = 101;
+        else if (keystr.substring(7, 2) == "V2") keyval.values[3] = 102;
+        else if (keystr.substring(7, 2) == "V3") keyval.values[3] = 103;
+        else if (keystr.substring(7, 2) == "IQ") keyval.values[3] = 104;
         else {
-            std::cerr << "Invalid key format (key format example: A01275379)\n";
-            return 2;
+            alert("Invalid key format (key format example: A01275379)\n");
+            return '2';
         }
     }
     if (keyval.values[0] > 26) {
-        std::cerr << "Invalid key format (key format example: A01275379)\n";
-        return 2;
+        alert("Invalid key format (key format example: A01275379)\n");
+        return '2';
     }
     if (keyval.values[1] < 27 || keyval.values[1] > 52) {
-        std::cerr << "Invalid key format (key format example: A01275379)\n";
-        return 2;
+        alert("Invalid key format (key format example: A01275379)\n");
+        return '2';
     }
     if (keyval.values[2] < 53 || keyval.values[2] > 78) {
-        std::cerr << "Invalid key format (key format example: A01275379)\n";
-        return 2;
+        alert("Invalid key format (key format example: A01275379)\n");
+        return '2';
     }
     if (keyval.values[3] < 79 || keyval.values[3] > 104) {
-        std::cerr << "Invalid key format (key format example: A01275379)\n";
-        return 2;
+        alert("Invalid key format (key format example: A01275379)\n");
+        return "2";
     }
     if (keyval.values[3] == 0) keyval.values[3] = 100;
-    
-    std::istream * in = getFile(argc, argv);
-    srand((unsigned)time(0));
-    while (!in->eof()) {
-        key value;
+    var retval = "";
+    for (var i = 0; i < text.length; i++) {
+        var value = new key();
         if (encstate == 0) {
             //decrypt
-            char ch = in->get();
-            value.encryptable = !(ch & 0b10000000);
-            value.values[0] = ch & 0b01111111;
-            std::cout << fillValue(value, keyval).character;
+            var ch = text[i];
+            value.encryptable = (co(ch) & 0b10000000) == 0;
+            value.values[0] = co(ch) & 0b01111111;
+            retval += fillValue(value, keyval).character;
         } else {
             //encrypt
-            char c = in->get();
-            if (c == 0x7f || c  == (-118 & 0x7f)) continue;
-            char ch = setcase(c, lowercase);
-            value.encryptable = !(ch & 0b10000000);
+            var c = text[i];
+            if (co(c) == 0x7f || co(c)  == (-118 & 0x7f)) continue;
+            var ch = setcase(c, lowercase);
+            value.encryptable = (co(ch) & 0b10000000) == 0;
             value.character = ch;
-            if (ch == -1) continue;
-            int num = rand() % 4;
+            if (co(ch) == -1 || ch == -1) continue;
+            var num = Math.floor(Math.random() * 4);
             assert(num >= 0 && num < 4);
-            char values[4];
-            strlcpy(values, fillValue(value, keyval).values, 4);
+            var values = new Array(4);
+            values = fillValue(value, keyval).values;
             if (values[0] > 100) values[0] = values[1];
             if (values[1] > 100) values[1] = values[2];
             if (values[2] > 100) values[2] = values[0];
             if (values[3] > 100) num = rand() % 3;
-            if (encstate == 1) std::cout << fillValue(value, keyval).values[num];
-            else std::cout << (int)fillValue(value, keyval).values[num] << " ";
+            if (encstate == 1) retval += st(fillValue(value, keyval).values[num]);
+            else retval += fillValue(value, keyval).values[num] + " ";
         }
     }
     
-    if (encstate != 1) std::cout << "\n";
-    std::cout.flush();
-    if (infile.is_open()) infile.close();
-    return 0;
+    if (encstate != 1) retval += "\n";
+    return retval;
 }
