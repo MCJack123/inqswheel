@@ -132,3 +132,5 @@ function inqswheel(encstate, keystr, text) {
     if (encstate != 1) retval += "\n";
     return retval;
 }
+
+exports.inqswheel = inqswheel;
