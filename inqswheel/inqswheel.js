@@ -133,4 +133,4 @@ function inqswheel(encstate, keystr, text) {
     return retval;
 }
 
-exports.inqswheel = inqswheel;
+exports = inqswheel;
